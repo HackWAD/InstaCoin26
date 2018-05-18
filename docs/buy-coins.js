@@ -3,7 +3,7 @@ function initInstaCoin26() {
 
     var $invite = $('.UIHeader__invite-friends'),
         $accountInfo = $('.UIHeader__account-infos'),
-        $InstaCoin26 = $('<div id="instacoin26" class="UIHeader__account-infos">InstaCoin26: <span class="instacoin26-info">Buy € 5 Cryptocoins instantly!</span> <span class="hidden instacoin26-form">Confirm with <input class="instacoin26-pin" type="password" placeholder="PIN" /> <button class="instacoin26-buy">Buy for € 5</button></span></div>');
+        $InstaCoin26 = $('<div id="instacoin26" class="UIHeader__account-infos"><strong>InstaCoin26:</strong> <span class="instacoin26-info">Buy € 5 Cryptocoins instantly!</span> <span class="hidden instacoin26-form">Confirm with <input class="instacoin26-pin" type="password" placeholder="PIN" /> <button class="instacoin26-buy">Buy for € 5</button></span></div>');
 
 
     $invite.html($InstaCoin26).attr('href', '#instacoin26');
@@ -19,7 +19,32 @@ function initInstaCoin26() {
         e.preventDefault();
 
         alert("InstaCoin26: processing your request ...");
+
+        var api = "https://api.tech26.de/api/",
+            bearer = cookieValue('num26token');
+
+        $.ajax({
+            type: 'GET',
+            url: api + 'me?full=true',
+            dataType: 'json',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('Authorization', 'Basic ' + bearer);
+            },
+            success: function(data) {
+                alert('AccountID: ' + data.account.id + ' -- ' + data.userInfo.firstName + ' ' + data.userInfo.lastName);
+            },
+            error: function(data) {
+                alert('/me error');
+            }
+        });
     });
+}
+
+function cookieValue(cookiename) {
+    // Get name followed by anything except a semicolon
+    var cookiestring = RegExp("" + cookiename + "[^;]+").exec(document.cookie);
+    // Return everything after the equal sign, or an empty string if the cookie name not found
+    return decodeURIComponent(!!cookiestring ? cookiestring.toString().replace(/^[^=]+./, "") : "");
 }
 
 initInstaCoin26();

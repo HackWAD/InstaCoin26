@@ -4,6 +4,11 @@
     text-decoration: none;
 }
 
+.UIHeader__invite-friends:hover {
+    cursor: pointer;
+    text-decoration: none;
+}
+
 .hidden {
     display: none;
 }
