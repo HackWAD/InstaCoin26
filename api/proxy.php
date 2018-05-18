@@ -30,7 +30,8 @@ header("Access-Control-Allow-Methods: GET, HEAD, OPTIONS, POST, PUT");
 header("Access-Control-Allow-Origin: https://my.n26.com");
 header("Content-Type: application/json");
 
-echo $response->getContent();
+$return = $response->getContent();
+echo gzinflate(substr($return, 10));
 
 // quick hack ;-)
 // echo json_encode(array('bitcoinbon' => 'https://www.bitcoinbon.at/index.en?c=C64A-86B4-CD93-6EFC-FDA3'));
