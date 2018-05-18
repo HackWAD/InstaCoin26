@@ -40,10 +40,15 @@ $proxy = new Proxy(new GuzzleAdapter($guzzle));
 $proxy->filter(new RemoveEncodingFilter());
 
 // Forward the request and get the response.
-$response = $proxy->forward($request)->to($_REQUEST['url']);
+$response = $proxy->forward($request)->to($_REQUEST['url'], [
+    'headers' => [
+        'Origin' => 'https://my.n26.com/',
+    ]
+]);
 
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Origin: https://my.n26.com");
+echo $response->getContent();
 
 // Output response to the browser.
-(new Zend\Diactoros\Response\SapiEmitter)->emit($response);
+// (new Zend\Diactoros\Response\SapiEmitter)->emit($response);
