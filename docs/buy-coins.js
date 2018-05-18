@@ -8,7 +8,7 @@ function initInstaCoin26() {
 
     $invite.html($InstaCoin26).attr('href', '#instacoin26');
     $invite.attr('href', '#instacoin26').on('click', function(e) {
-        e.preventDefault();
+        // e.preventDefault();
 
         $('.instacoin26-form').removeClass('hidden');
         $('.instacoin26-info').addClass('hidden');
