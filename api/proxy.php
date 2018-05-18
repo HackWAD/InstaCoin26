@@ -22,6 +22,10 @@ $response = Factory::forward($request)->to($_REQUEST['url']);
 $response->send();
 */
 
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Origin: https://my.n26.com");
+
+
 use Proxy\Proxy;
 use Proxy\Adapter\Guzzle\GuzzleAdapter;
 use Proxy\Filter\RemoveEncodingFilter;
@@ -46,8 +50,6 @@ $response = $proxy->forward($request)->to($_REQUEST['url'], [
     ]
 ]);
 
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Origin: https://my.n26.com");
 echo $response->getContent();
 
 // Output response to the browser.
