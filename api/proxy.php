@@ -15,7 +15,7 @@ $request = Request::createFromGlobals();
 // Forward the request and get the response.
 $response = Factory::forward($request)->to($_REQUEST['url']);
 
-header('Access-Control-Allow-Origin: https://my.n26.com');
+header('Access-Control-Allow-Origin: *');
 // Output response to the browser.
 // echo $response->getContent();
 $response->send();
