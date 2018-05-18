@@ -17,3 +17,10 @@
     max-width: 20px;
     margin: 0 0 0 5px;
 }
+
+.instacoin26-form a,
+.instacoin26-form a:hover,
+.instacoin26-form a:active,
+.instacoin26-form a:visited {
+    color: white;
+}
