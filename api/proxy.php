@@ -33,7 +33,6 @@ header("Content-Type: application/json");
 $return = $response->getContent();
 if (strpos($_REQUEST['url'], 'me') >= 0) {
     echo gzinflate(substr($return, 10));
-    echo $return;
 } else {
     // just for /me
     //echo gzinflate(substr($return, 10));
