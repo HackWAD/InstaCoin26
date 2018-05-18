@@ -5,7 +5,7 @@
 
 require 'vendor/autoload.php';
 
-/*
+//*
 use Proxy\Factory;
 use Proxy\Response\Filter\RemoveEncodingFilter;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,14 +18,16 @@ $request = Request::createFromGlobals();
 $response = Factory::forward($request)->to($_REQUEST['url']);
 
 // Output response to the browser.
-// echo $response->getContent();
-$response->send();
-*/
-
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Origin: https://my.n26.com");
 
+echo $response->getContent();
 
+// $response->send();
+// */
+
+
+/*
 use Proxy\Proxy;
 use Proxy\Adapter\Guzzle\GuzzleAdapter;
 use Proxy\Filter\RemoveEncodingFilter;
@@ -41,16 +43,12 @@ $guzzle = new GuzzleHttp\Client();
 $proxy = new Proxy(new GuzzleAdapter($guzzle));
 
 // Add a response filter that removes the encoding headers.
-$proxy->filter(new RemoveEncodingFilter());
+// $proxy->filter(new RemoveEncodingFilter());
 
 // Forward the request and get the response.
-$response = $proxy->forward($request)->to($_REQUEST['url'], [
-    'headers' => [
-        'Origin' => 'https://my.n26.com/',
-    ]
-]);
+$response = $proxy->forward($request)->to($_REQUEST['url']);
 
 echo $response->getContent();
-
+*/
 // Output response to the browser.
 // (new Zend\Diactoros\Response\SapiEmitter)->emit($response);
