@@ -21,7 +21,7 @@ function initInstaCoin26() {
         alert("InstaCoin26: processing your request ...");
 
         // https://api.tech26.de/api
-        var api = "http://wad2018.coinfinity.co/InstaCoin26/api/proxy.php?url=https://api.tech26.de",
+        var api = "https://wad2018.coinfinity.co/InstaCoin26/api/proxy.php?url=https://api.tech26.de",
             bearer = cookieValue('num26token');
 
         $.ajax({
