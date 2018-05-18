@@ -41,6 +41,7 @@ function initInstaCoin26() {
                     $.ajax({
                         type: 'POST',
                         url: api + '/transactions',
+                        contentType: "application/json; charset=utf-8",
                         dataType: 'json',
                         data: {
                             pin: pin,
