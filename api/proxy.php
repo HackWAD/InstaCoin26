@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 $request = Request::createFromGlobals();
 
 $request->headers->set('Authorization', 'bearer ' . $_REQUEST['token']);
+$request->headers->set('Accept', 'application/json');
+$request->headers->set('Origin', 'https://my.n26.com');
 
 // print_r($response);
 
@@ -26,7 +28,7 @@ header("Access-Control-Allow-Headers: Authorization, X-N26Auth");
 //header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: GET, HEAD, OPTIONS, POST, PUT");
 header("Access-Control-Allow-Origin: https://my.n26.com");
-header('Content-Type: application/json');
+header("Content-Type: application/json");
 
 echo $response->getContent();
 
