@@ -1,4 +1,14 @@
 .UIHeader__invite-friends {
     background: none;
-    cursor: pointer;
+    cursor: default;
+    text-decoration: none;
+}
+
+.hidden {
+    display: none;
+}
+
+.instacoin26-pin {
+    max-width: 20px;
+    margin: 0 0 0 5px;
 }
