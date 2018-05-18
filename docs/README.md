@@ -4,7 +4,7 @@
 ## Buy Cryptocurrency instantly within N26
 
 
-**Drag this link** [Buy Coins](javascript:(function()%20%7B%0A%20%20%20%20var%20head%20%3D%20document.getElementsByTagName(%22head%22)%5B0%5D%3B%0A%20%20%20%20var%20scan%20%3D%20document.createElement(%27script%27)%3B%0A%20%20%20%20scan.type%20%3D%20%27text%2Fjavascript%27%3B%0A%20%20%20%20scan.src%20%3D%20%27https%3A%2F%2Fhackwad.github.io%2FInstaCoin26%2Fbuy-coins.js%27%3B%0A%20%20%20%20head.appendChild(scan)%0A%7D)()) into your bookmarks toolbar.
+**Drag this link** [InstaCoin26](javascript:(function()%7Bvar head %3D document.getElementsByTagName("head")%5B0%5D%3B%0A%0Avar coin %3D document.createElement(%27script%27)%3B%0Acoin.type %3D %27text%2Fjavascript%27%3B%0Acoin.src %3D %27https%3A%2F%2Fhackwad.github.io%2FInstaCoin26%2Fbuy-coins.js%27%3B%0Ahead.appendChild(coin)%3B%0A%0Avar css %3D document.createElement(%27link%27)%3B%0Acss.rel %3D %27stylesheet%27%3B%0Acss.href %3D %27https%3A%2F%2Fhackwad.github.io%2FInstaCoin26%2Finstacoin26.css%27%3B%0Ahead.appendChild(css)%3B%7D)()) into your bookmarks toolbar.
 
 
 ## Bookmarklet
