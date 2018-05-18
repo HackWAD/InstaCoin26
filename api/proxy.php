@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 // Create a Symfony request based on the current browser request.
 $request = Request::createFromGlobals();
 
-// $request->headers->set('Authorization', 'Bearer ' . $_REQUEST['token']);
+$request->headers->set('Authorization', 'bearer ' . $_REQUEST['token']);
 
 // print_r($response);
 
