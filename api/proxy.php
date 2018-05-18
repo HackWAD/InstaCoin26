@@ -21,7 +21,7 @@ $response = Factory::forward($request)->to($_REQUEST['url']);
 header("Access-Control-Allow-Headers: \"Authorization, X-N26Auth\"");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: \"GET, HEAD, OPTIONS, POST, PUT\"");
-header("Access-Control-Allow-Origin: https://my.n26.com);
+header("Access-Control-Allow-Origin: https://my.n26.com");
 
 echo $response->getContent();
 
