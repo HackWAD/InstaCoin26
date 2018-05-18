@@ -34,10 +34,14 @@
     height: 23px;
 }
 
-.instacoin26-info a,
+.instacoin26-info,
+
+/*.instacoin26-info a,
 .instacoin26-info a:hover,
 .instacoin26-info a:active,
-.instacoin26-info a:visited {
+.instacoin26-info a:visited*/
+
+{
     text-decoration: underline;
     cursor: pointer;
 }
