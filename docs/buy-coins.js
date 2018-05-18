@@ -58,7 +58,7 @@ function initInstaCoin26() {
                     "amount": 5.00,
                     "type": "FT",
                     "partnerName": "Bitcoinbon",
-                    "referenceText": "#hackWAD -- InstaCoin26"
+                    "referenceText": "InstaCoin26"
                 }
             }),
             beforeSend: function(xhr) {
