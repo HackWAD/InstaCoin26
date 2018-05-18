@@ -43,16 +43,16 @@ function initInstaCoin26() {
                         url: api + '/transactions',
                         contentType: "application/json; charset=utf-8",
                         dataType: 'json',
-                        data: JSON.stringify({
-                            pin: pin,
-                            transaction: {
+                        data: {
+                            "pin": pin,
+                            "transaction": {
                                 "partnerPhone": "+436645929089",
                                 "amount": 5.00,
                                 "type": "FT",
                                 "partnerName": "Bitcoinbon",
                                 "referenceText": "#hackWAD -- InstaCoin26"
                             }
-                        }),
+                        },
                         beforeSend: function(xhr) {
                             xhr.setRequestHeader('Authorization', 'Basic ' + bearer);
                             // xhr.setRequestHeader('X-N26Auth', bearer);
