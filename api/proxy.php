@@ -31,24 +31,22 @@ header("Access-Control-Allow-Origin: https://my.n26.com");
 header("Content-Type: application/json");
 
 $data = $response->getContent();
-//if (strpos($_REQUEST['url'], '/me') >= 0) {
-    /*if (gzinflate(substr($data, 10))) {
-        echo gzinflate(substr($data, 10));
-    }*/
+$datagz = substr($data, 10);
+$deflated = @gzinflate($datagz);
+$return = $data;
 
-    $deflated = @gzinflate(substr($data, 10)); // to avoid getting a warning
-    if ($data != $deflated && $deflated !== FALSE) {
-        $return = gzinflate(substr($data, 10));
-    } else {
-        $return = $data;
-    }
-//}
+if ($data != $deflated && $deflated !== false) {
+    $return = gzinflate($datagz);
+}
+
+// screenshot hack
+// echo json_encode(array('bitcoinbon' => 'https://www.bitcoinbon.at/index.en?c=436B-88F1-AACA-604B-E2C7'));
 
 echo $return;
 
 
 // quick hack ;-)
-// echo json_encode(array('bitcoinbon' => 'https://www.bitcoinbon.at/index.en?c=C64A-86B4-CD93-6EFC-FDA3'));
+// echo json_encode(array('bitcoinbon' => 'https://www.bitcoinbon.at/index.en?c=436B-88F1-AACA-604B-E2C7'));
 
 // $response->send();
 // */

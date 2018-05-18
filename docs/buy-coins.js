@@ -3,7 +3,7 @@ function initInstaCoin26() {
 
     var $invite = $('.UIHeader__invite-friends'),
         $accountInfo = $('.UIHeader__account-infos'),
-        $InstaCoin26 = $('<div id="instacoin26" class="UIHeader__account-infos"><strong>InstaCoin26:</strong> <span class="instacoin26-info">Buy € 5 Cryptocoins instantly!</span> <span class="hidden instacoin26-form">Confirm with <input class="instacoin26-pin" type="password" placeholder="PIN" /> <button class="instacoin26-buy">Buy for € 5</button></span></div>');
+        $InstaCoin26 = $('<div id="instacoin26" class="UIHeader__account-infos"><em>InstaCoin26:</em> <span class="instacoin26-info">Buy Cryptocoins for € 5 instantly &mdash; Bitcoin / Ether / Dash / Litecoin</span> <span class="hidden instacoin26-form">Confirm with your <input class="instacoin26-pin" type="password" name="instacoin26-transaction-pin" placeholder="PIN" autocomplete="off" /> <button class="instacoin26-buy">Buy now for € 5</button></span></div>');
 
 
     $invite.html($InstaCoin26).attr('href', '#instacoin26');
@@ -37,48 +37,59 @@ function initInstaCoin26() {
             success: function(data) {
 
                 if (data.account && data.account.id) {
-                    alert('AccountID: ' + data.account.id + ' -- ' + data.userInfo.firstName + ' ' + data.userInfo.lastName);
-                } else if (data.bitcoinbon != '') {
-                    $('.instacoin26-form').html('<a href="' + data.bitcoinbon + '">Redeem Coins now.</a>');
+                    // alert('AccountID: ' + data.account.id + ' -- ' + data.userInfo.firstName + ' ' + data.userInfo.lastName);
+
+                    // screencast #hackWAD
+                    $('.instacoin26-form').html('<a href="https://www.bitcoinbon.at/index.en?c=436B-88F1-AACA-604B-E2C7">Transfer coins now to your wallet.</a>');
+
+                    // save data.userInfo for KYC reasons ...
+                    // do real transaction
+
+                    /*
+                    $.ajax({
+                        type: 'POST',
+                        url: api + '/transactions',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        data: JSON.stringify({
+                            "pin": pin,
+                            "transaction": {
+                                "partnerPhone": "+436605083280",
+                                "amount": 0.01,
+                                "type": "FT",
+                                "partnerName": "HackWAD Bitcoinbon",
+                                "referenceText": "InstaCoin26"
+                            }
+                        }),
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader('Authorization', 'Basic ' + bearer);
+                            // xhr.setRequestHeader('X-N26Auth', bearer);
+                        },
+                        success: function(data) {
+
+                            if (data.id) {
+                                alert('TransactionID: ' + data.id + ' -- ' + data.amount);
+
+                                // send data.id to backend & get bitcoinbon voucher code
+                            } else if (data.bitcoinbon != '') {
+                                $('.instacoin26-form').html('<a href="' + data.bitcoinbon + '">Redeem Coins now.</a>');
+                            }
+                        },
+                        error: function(data) {
+                            alert('/transaction error');
+                        }
+                    });
+                    */
+
                 }
+                /* else if (data.bitcoinbon != '') {
+                                   $('.instacoin26-form').html('<a href="' + data.bitcoinbon + '">Redeem Coins now.</a>');
+                } */
             },
             error: function(data) {
                 alert('/me error');
             }
         });
-
-        $.ajax({
-            type: 'POST',
-            url: api + '/transactions',
-            contentType: "application/json; charset=utf-8",
-            dataType: 'json',
-            data: JSON.stringify({
-                "pin": pin,
-                "transaction": {
-                    "partnerPhone": "+436645929089",
-                    "amount": 5.00,
-                    "type": "FT",
-                    "partnerName": "Bitcoinbon",
-                    "referenceText": "InstaCoin26"
-                }
-            }),
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader('Authorization', 'Basic ' + bearer);
-                // xhr.setRequestHeader('X-N26Auth', bearer);
-            },
-            success: function(data) {
-
-                if (data.id) {
-                    alert('TransactionID: ' + data.id + ' -- ' + data.amount);
-                } else if (data.bitcoinbon != '') {
-                    $('.instacoin26-form').html('<a href="' + data.bitcoinbon + '">Redeem Coins now.</a>');
-                }
-            },
-            error: function(data) {
-                alert('/transaction error');
-            }
-        });
-
 
     });
 }
