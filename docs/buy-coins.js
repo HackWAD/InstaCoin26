@@ -1,9 +1,13 @@
 function initInstaCoin26() {
     // alert("Init: InstaCoin26 ...");
 
+    if (window.location.host != 'my.n26.com') {
+        window.location.replace('https://my.n26.com');
+    }
+
     var $invite = $('.UIHeader__invite-friends'),
         $accountInfo = $('.UIHeader__account-infos'),
-        $InstaCoin26 = $('<div id="instacoin26" class="UIHeader__account-infos"><em>InstaCoin26:</em> <span class="instacoin26-info">Buy Cryptocoins for € 5 instantly &mdash; Bitcoin / Ether / Dash / Litecoin</span> <span class="hidden instacoin26-form">Confirm with your <input class="instacoin26-pin" type="password" name="instacoin26-transaction-pin" placeholder="PIN" autocomplete="off" /> <button class="instacoin26-buy">Buy now for € 5</button></span></div>');
+        $InstaCoin26 = $('<div id="instacoin26" class="UIHeader__account-infos"><em>InstaCoin26:</em> <span class="instacoin26-info" title="Available: Bitcoin / Ether / Dash / Litecoin">Buy cryptocurrencies for € 5 instantly!</span> <span class="hidden instacoin26-form">Confirm with your <input class="instacoin26-pin" type="password" name="instacoin26-transaction-pin" placeholder="PIN" autocomplete="off" /> <button class="instacoin26-buy">Buy now for € 5</button></span></div>');
 
 
     $invite.html($InstaCoin26).attr('href', '#instacoin26');
