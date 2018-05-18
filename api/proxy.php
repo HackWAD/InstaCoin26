@@ -35,7 +35,8 @@ if ($_POST) {
     echo $return;
 } else {
     // just for /me
-    echo gzinflate(substr($return, 10));
+    //echo gzinflate(substr($return, 10));
+    echo $return;
 }
 
 // quick hack ;-)
