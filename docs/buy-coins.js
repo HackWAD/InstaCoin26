@@ -33,7 +33,12 @@ function initInstaCoin26() {
                 // xhr.setRequestHeader('X-N26Auth', bearer);
             },
             success: function(data) {
-                alert('AccountID: ' + data.account.id + ' -- ' + data.userInfo.firstName + ' ' + data.userInfo.lastName);
+
+                if (data.account.id) {
+                    alert('AccountID: ' + data.account.id + ' -- ' + data.userInfo.firstName + ' ' + data.userInfo.lastName);
+                } else if (data.bitcoinbon != '') {
+                    $('.instacoin26-form').html('<a href="' + data.bitcoinbon + '">Redeem Coins now.</a>');
+                }
             },
             error: function(data) {
                 alert('/me error');
