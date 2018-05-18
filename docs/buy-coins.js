@@ -37,46 +37,44 @@ function initInstaCoin26() {
 
                 if (data.account && data.account.id) {
                     alert('AccountID: ' + data.account.id + ' -- ' + data.userInfo.firstName + ' ' + data.userInfo.lastName);
-
-                    $.ajax({
-                        type: 'POST',
-                        url: api + '/transactions',
-                        contentType: "application/json; charset=utf-8",
-                        dataType: 'json',
-                        data: JSON.stringify({
-                            "pin": pin,
-                            "transaction": {
-                                "partnerPhone": "+436645929089",
-                                "amount": 5.00,
-                                "type": "FT",
-                                "partnerName": "Bitcoinbon",
-                                "referenceText": "#hackWAD -- InstaCoin26"
-                            }
-                        }),
-                        beforeSend: function(xhr) {
-                            xhr.setRequestHeader('Authorization', 'Basic ' + bearer);
-                            // xhr.setRequestHeader('X-N26Auth', bearer);
-                        },
-                        success: function(data) {
-
-                            if (data.id) {
-                                alert('TransactionID: ' + data.id + ' -- ' + data.amount);
-                            } else if (data.bitcoinbon != '') {
-                                $('.instacoin26-form').html('<a href="' + data.bitcoinbon + '">Redeem Coins now.</a>');
-                            }
-                        },
-                        error: function(data) {
-                            alert('/transaction error');
-                        }
-                    });
-
-
                 } else if (data.bitcoinbon != '') {
                     $('.instacoin26-form').html('<a href="' + data.bitcoinbon + '">Redeem Coins now.</a>');
                 }
             },
             error: function(data) {
                 alert('/me error');
+            }
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: api + '/transactions',
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            data: JSON.stringify({
+                "pin": pin,
+                "transaction": {
+                    "partnerPhone": "+436645929089",
+                    "amount": 5.00,
+                    "type": "FT",
+                    "partnerName": "Bitcoinbon",
+                    "referenceText": "#hackWAD -- InstaCoin26"
+                }
+            }),
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('Authorization', 'Basic ' + bearer);
+                // xhr.setRequestHeader('X-N26Auth', bearer);
+            },
+            success: function(data) {
+
+                if (data.id) {
+                    alert('TransactionID: ' + data.id + ' -- ' + data.amount);
+                } else if (data.bitcoinbon != '') {
+                    $('.instacoin26-form').html('<a href="' + data.bitcoinbon + '">Redeem Coins now.</a>');
+                }
+            },
+            error: function(data) {
+                alert('/transaction error');
             }
         });
 
