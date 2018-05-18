@@ -1,13 +1,14 @@
 {
     "name": "jenssegers/proxy",
     "description": "Proxy library that forwards requests to the desired url and returns the response.",
+    "type": "library",
     "keywords": ["proxy"],
     "homepage": "https://github.com/jenssegers/php-proxy",
     "license": "MIT",
     "authors": [
         {
             "name": "Jens Segers",
-            "homepage": "https://jenssegers.com"
+            "homepage": "http://jenssegers.be"
         },
         {
             "name": "Ota Mares",
@@ -16,24 +17,17 @@
         }
     ],
     "require": {
-        "psr/http-message": "^1.0",
-        "guzzlehttp/guzzle": "^6.0",
-        "zendframework/zend-diactoros": "^1.0",
-        "relay/relay": "^1.0"
+        "symfony/http-foundation": "~2.6",
+        "guzzlehttp/guzzle": "~4.0|~5.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.0|^7.0",
-        "satooshi/php-coveralls": "^2.0",
-        "mockery/mockery": "^1.1"
+        "phpunit/phpunit": "~4.4",
+        "satooshi/php-coveralls": "~0.6",
+        "mockery/mockery": "~0.9"
     },
     "autoload": {
         "psr-4": {
             "Proxy\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Proxy\\": "tests"
         }
     }
 }

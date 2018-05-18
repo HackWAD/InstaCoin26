@@ -1,18 +1,24 @@
-<?php
-
-namespace Proxy\Adapter\Dummy;
+<?php namespace Proxy\Adapter\Dummy;
 
 use Proxy\Adapter\AdapterInterface;
-use Psr\Http\Message\RequestInterface;
-use Zend\Diactoros\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-class DummyAdapter implements AdapterInterface
-{
+class DummyAdapter implements AdapterInterface {
+
     /**
-     * @inheritdoc
+     * Send the request and return the response.
+     *
+     * @param  Request $request
+     * @param  string  $url
+     * @return Response
      */
-    public function send(RequestInterface $request)
+    public function send(Request $request, $url)
     {
-        return new Response($request->getBody(), 200);
+        $response = new Response($request->getContent(), 200, ['X-Url' => $url]);
+
+        $response->prepare($request);
+
+        return $response;
     }
 }
