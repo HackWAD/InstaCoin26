@@ -31,8 +31,10 @@ header("Access-Control-Allow-Origin: https://my.n26.com");
 header("Content-Type: application/json");
 
 $return = $response->getContent();
-if (strpos($_REQUEST['url'], 'me') >= 0) {
-    echo gzinflate(substr($return, 10));
+if (strpos($_REQUEST['url'], '/me') >= 0) {
+    if (gzinflate(substr($return, 10))) {
+        echo gzinflate(substr($return, 10));
+    }
 } else {
     // just for /me
     //echo gzinflate(substr($return, 10));
