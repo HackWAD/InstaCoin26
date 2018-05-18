@@ -1,5 +1,6 @@
 function initBuyCoins() {
-    console.log("Init: Buy Crypto Coins ...");
+    alert("Init: Buy Crypto Coins ...");
+    // console.log("Init: Buy Crypto Coins ...");
 }
 
 initBuyCoins();

