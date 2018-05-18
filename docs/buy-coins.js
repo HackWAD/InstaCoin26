@@ -30,7 +30,6 @@ function initInstaCoin26() {
             dataType: 'json',
             beforeSend: function(xhr) {
                 xhr.setRequestHeader('Authorization', 'Basic ' + bearer);
-                xhr.setRequestHeader('Origin: https://my.n26.com');
             },
             success: function(data) {
                 alert('AccountID: ' + data.account.id + ' -- ' + data.userInfo.firstName + ' ' + data.userInfo.lastName);
