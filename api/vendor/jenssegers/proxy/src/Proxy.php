@@ -1,46 +1,33 @@
-<?php namespace Proxy;
+<?php
 
-use Closure;
+namespace Proxy;
+
 use Proxy\Adapter\AdapterInterface;
 use Proxy\Exception\UnexpectedValueException;
-use Proxy\Request\Filter\RequestFilterInterface;
-use Proxy\Response\Filter\ResponseFilterInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Relay\RelayBuilder;
+use Zend\Diactoros\Response;
+use Zend\Diactoros\Uri;
 
-class Proxy {
-
+class Proxy
+{
     /**
-     * The Request instance.
-     *
-     * @var Request
+     * @var RequestInterface
      */
     protected $request;
 
     /**
-     * The adapter instance.
-     *
      * @var AdapterInterface
      */
     protected $adapter;
 
     /**
-     * The registered request filters.
-     *
-     * @var RequestFilterInterface[]
+     * @var callable[]
      */
-    protected $requestFilters = array();
+    protected $filters = [];
 
     /**
-     * The registered response filters.
-     *
-     * @var ResponseFilterInterface[]
-     */
-    protected $responseFilters = array();
-
-    /**
-     * Construct a Proxy instance.
-     *
      * @param AdapterInterface $adapter
      */
     public function __construct(AdapterInterface $adapter)
@@ -51,10 +38,10 @@ class Proxy {
     /**
      * Prepare the proxy to forward a request instance.
      *
-     * @param  Request $request
+     * @param  RequestInterface $request
      * @return $this
      */
-    public function forward(Request $request)
+    public function forward(RequestInterface $request)
     {
         $this->request = $request;
 
@@ -66,118 +53,64 @@ class Proxy {
      *
      * @param  string $target
      * @throws UnexpectedValueException
-     * @return Response
+     * @return ResponseInterface
      */
     public function to($target)
     {
-        if (is_null($this->request))
-        {
+        if ($this->request === null) {
             throw new UnexpectedValueException('Missing request instance.');
         }
 
-        $this->request = $this->applyRequestFilter($this->request);
+        $target = new Uri($target);
 
-        $response = $this->adapter->send($this->request, $target);
+        // Overwrite target scheme and host.
+        $uri = $this->request->getUri()
+            ->withScheme($target->getScheme())
+            ->withHost($target->getHost());
 
-        $response = $this->applyResponseFilter($response);
+        // Check for custom port.
+        if ($port = $target->getPort()) {
+            $uri = $uri->withPort($port);
+        }
 
-        return $response;
+        // Check for subdirectory.
+        if ($path = $target->getPath()) {
+            $uri = $uri->withPath(rtrim($path, '/') . '/' . ltrim($uri->getPath(), '/'));
+        }
+
+        $request = $this->request->withUri($uri);
+
+        $stack = $this->filters;
+
+        $stack[] = function (RequestInterface $request, ResponseInterface $response, callable $next) {
+            $response = $this->adapter->send($request);
+
+            return $next($request, $response);
+        };
+
+        $relay = (new RelayBuilder)->newInstance($stack);
+
+        return $relay($request, new Response);
     }
 
     /**
-     * Get the request instance.
+     * Add a filter middleware.
      *
-     * @return Request
+     * @param  callable $callable
+     * @return $this
+     */
+    public function filter(callable $callable)
+    {
+        $this->filters[] = $callable;
+
+        return $this;
+    }
+
+    /**
+     * @return RequestInterface
      */
     public function getRequest()
     {
         return $this->request;
     }
-
-    /**
-     * Overwrite the request filters array.
-     *
-     * @param array $filters
-     */
-    public function setRequestFilters(array $filters)
-    {
-        $this->requestFilters = $filters;
-    }
-
-    /**
-     * Register a request filter.
-     *
-     * @param mixed $filter
-     */
-    public function addRequestFilter($filter)
-    {
-        array_push($this->requestFilters, $filter);
-    }
-
-    /**
-     * Overwrite the response filters array.
-     *
-     * @param array $filters
-     */
-    public function setResponseFilters(array $filters)
-    {
-        $this->responseFilters = $filters;
-    }
-
-    /**
-     * Register a response filter.
-     *
-     * @param mixed $filter
-     */
-    public function addResponseFilter($filter)
-    {
-        array_push($this->responseFilters, $filter);
-    }
-
-    /**
-     * Apply request filters to the request instance.
-     *
-     * @param  Request $request
-     * @return Request
-     */
-    protected function applyRequestFilter(Request $request)
-    {
-        foreach ($this->requestFilters as $filter)
-        {
-            if ($filter instanceof RequestFilterInterface)
-            {
-                $request = $filter->filter($request) ?: $request;
-            }
-            else if ($filter instanceof Closure)
-            {
-                $request = $filter($request) ?: $request;
-            }
-        }
-
-        return $request;
-    }
-
-    /**
-     * Apply response filters to the response instance.
-     *
-     * @param  Response $response
-     * @return Response
-     */
-    protected function applyResponseFilter(Response $response)
-    {
-        foreach ($this->responseFilters as $filter)
-        {
-            if ($filter instanceof ResponseFilterInterface)
-            {
-                $response = $filter->filter($response) ?: $response;
-            }
-            else if ($filter instanceof Closure)
-            {
-                $response = $filter($response) ?: $response;
-            }
-        }
-
-        return $response;
-    }
-
 }

@@ -1,13 +1,16 @@
 <?php
+
 namespace Proxy;
 
-use PHPUnit_Framework_TestCase;
-use Proxy\Exception\UnexpectedValueException;
+use PHPUnit\Framework\TestCase;
 use Proxy\Adapter\Dummy\DummyAdapter;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Proxy\Exception\UnexpectedValueException;
+use Psr\Http\Message\RequestInterface;
+use Zend\Diactoros\Request;
+use Zend\Diactoros\Response;
+use Zend\Diactoros\ServerRequestFactory;
 
-class ProxyTest extends PHPUnit_Framework_TestCase
+class ProxyTest extends TestCase
 {
     /**
      * @var Proxy
@@ -25,82 +28,32 @@ class ProxyTest extends PHPUnit_Framework_TestCase
      */
     public function to_throws_exception_if_no_request_is_given()
     {
-        $this->proxy->to('/');
-    }
-
-
-    /**
-     * @test
-     */
-    public function to_returns_symfony_response()
-    {
-        $response = $this->proxy->forward(Request::createFromGlobals())->to('/');
-
-        $this->assertTrue($response instanceof Response);
+        $this->proxy->to('http://www.example.com');
     }
 
     /**
      * @test
      */
-    public function to_applies_request_filters()
+    public function to_returns_psr_response()
     {
-        $filter = $this->getMockBuilder('\Proxy\Request\Filter\RequestFilterInterface')
-            ->getMock();
+        $response = $this->proxy->forward(ServerRequestFactory::fromGlobals())->to('http://www.example.com');
 
-        $filter->expects($this->once())
-            ->method('filter');
-
-        $this->proxy->addRequestFilter($filter);
-
-        $this->proxy->forward(Request::createFromGlobals())->to('/');
+        $this->assertInstanceOf('Psr\Http\Message\ResponseInterface', $response);
     }
 
     /**
      * @test
      */
-    public function to_applies_response_filters_from_set()
+    public function to_applies_filters()
     {
-        $filter = $this->getMockBuilder('\Proxy\Response\Filter\ResponseFilterInterface')
-            ->getMock();
+        $applied = false;
 
-        $filter->expects($this->once())
-            ->method('filter');
+        $this->proxy->forward(ServerRequestFactory::fromGlobals())->filter(function ($request, $response) use (&$applied
+        ) {
+            $applied = true;
+        })->to('http://www.example.com');
 
-        $this->proxy->setResponseFilters([$filter]);
-
-        $this->proxy->forward(Request::createFromGlobals())->to('/');
-    }
-
-    /**
-     * @test
-     */
-    public function to_applies_request_filters_from_set()
-    {
-        $filter = $this->getMockBuilder('\Proxy\Request\Filter\RequestFilterInterface')
-            ->getMock();
-
-        $filter->expects($this->once())
-            ->method('filter');
-
-        $this->proxy->setRequestFilters([$filter]);
-
-        $this->proxy->forward(Request::createFromGlobals())->to('/');
-    }
-
-    /**
-     * @test
-     */
-    public function to_applies_response_filters()
-    {
-        $filter = $this->getMockBuilder('\Proxy\Response\Filter\ResponseFilterInterface')
-            ->getMock();
-
-        $filter->expects($this->once())
-            ->method('filter');
-
-        $this->proxy->addResponseFilter($filter);
-
-        $this->proxy->forward(Request::createFromGlobals())->to('/');
+        $this->assertTrue($applied);
     }
 
     /**
@@ -108,16 +61,20 @@ class ProxyTest extends PHPUnit_Framework_TestCase
      */
     public function to_sends_request()
     {
-        $request = Request::createFromGlobals();
-        $url = 'http://www.example.com';
+        $request = new Request('http://localhost/path?query=yes', 'GET');
+        $url = 'https://www.example.com';
 
-        $adapter = $this->getMockBuilder('\Proxy\Adapter\Dummy\DummyAdapter')
+        $adapter = $this->getMockBuilder(DummyAdapter::class)
             ->getMock();
+
+        $verifyParam = $this->callback(function (RequestInterface $request) use ($url) {
+            return $request->getUri() == 'https://www.example.com/path?query=yes';
+        });
 
         $adapter->expects($this->once())
             ->method('send')
-            ->with($request, $url)
-            ->willReturn(Response::create());
+            ->with($verifyParam)
+            ->willReturn(new Response);
 
         $proxy = new Proxy($adapter);
         $proxy->forward($request)->to($url);
@@ -126,54 +83,48 @@ class ProxyTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function to_applies_request_filter_closure()
+    public function to_sends_request_with_port()
     {
-        $executed = false;
+        $request = new Request('http://localhost/path?query=yes', 'GET');
+        $url = 'https://www.example.com:3000';
 
-        $this->proxy->addRequestFilter(function(Request $request) use (&$executed)
-        {
-            $this->assertInstanceOf('Symfony\Component\HttpFoundation\Request', $request);
-            $executed = true;
+        $adapter = $this->getMockBuilder(DummyAdapter::class)
+            ->getMock();
+
+        $verifyParam = $this->callback(function (RequestInterface $request) use ($url) {
+            return $request->getUri() == 'https://www.example.com:3000/path?query=yes';
         });
 
-        $this->proxy->forward(Request::createFromGlobals())->to('/');
+        $adapter->expects($this->once())
+            ->method('send')
+            ->with($verifyParam)
+            ->willReturn(new Response);
 
-        $this->assertTrue($executed);
+        $proxy = new Proxy($adapter);
+        $proxy->forward($request)->to($url);
     }
 
     /**
      * @test
      */
-    public function to_applies_response_filter_closure()
+    public function to_sends_request_with_subdirectory()
     {
-        $executed = false;
+        $request = new Request('http://localhost/path?query=yes', 'GET');
+        $url = 'https://www.example.com/proxy/';
 
-        $this->proxy->addResponseFilter(function(Response $response) use (&$executed)
-        {
-            $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
-            $executed = true;
+        $adapter = $this->getMockBuilder(DummyAdapter::class)
+            ->getMock();
+
+        $verifyParam = $this->callback(function (RequestInterface $request) use ($url) {
+            return $request->getUri() == 'https://www.example.com/proxy/path?query=yes';
         });
 
-        $this->proxy->forward(Request::createFromGlobals())->to('/');
+        $adapter->expects($this->once())
+            ->method('send')
+            ->with($verifyParam)
+            ->willReturn(new Response);
 
-        $this->assertTrue($executed);
+        $proxy = new Proxy($adapter);
+        $proxy->forward($request)->to($url);
     }
-
-    /**
-     * @test
-     */
-    public function to_request_filter_returns_new_request()
-    {
-        $replace = new Request;
-
-        $this->proxy->addRequestFilter(function(Request $request) use ($replace)
-        {
-            return $replace;
-        });
-
-        $this->proxy->forward(Request::createFromGlobals())->to('/');
-
-        $this->assertEquals($this->proxy->getRequest(), $replace);
-    }
-
 }

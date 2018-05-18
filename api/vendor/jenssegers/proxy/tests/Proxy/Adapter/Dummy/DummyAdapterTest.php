@@ -1,10 +1,12 @@
 <?php
+
 namespace Proxy\Adapter\Dummy;
 
+use Psr\Http\Message\ResponseInterface;
+use Zend\Diactoros\ServerRequestFactory;
+use PHPUnit\Framework\TestCase;
 
-use Symfony\Component\HttpFoundation\Request;
-
-class DummyAdapterTest extends \PHPUnit_Framework_TestCase
+class DummyAdapterTest extends TestCase
 {
     /**
      * @var DummyAdapter
@@ -19,35 +21,10 @@ class DummyAdapterTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function adapter_returns_symfony_response()
+    public function adapter_returns_psr_response()
     {
-        $response = $this->adapter->send(Request::createFromGlobals(), '/');
+        $response = $this->adapter->send(ServerRequestFactory::fromGlobals(), '/');
 
-        $this->assertTrue($response instanceof \Symfony\Component\HttpFoundation\Response);
-    }
-
-    /**
-     * @test
-     */
-    public function response_contains_target_url_as_xheader()
-    {
-        $url = 'http://www.rebuy.de';
-
-        $response = $this->adapter->send(Request::createFromGlobals(), $url);
-
-        $this->assertEquals($url, $response->headers->get("X-Url"));
-    }
-
-    /**
-     * @test
-     */
-    public function response_contains_body()
-    {
-        $content = 'Some awesome content that is passed through.';
-        $request = Request::create('/', 'POST', [], [], [], [], $content);
-
-        $response = $this->adapter->send($request, '/');
-
-        $this->assertEquals($content, $response->getContent());
+        $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 }

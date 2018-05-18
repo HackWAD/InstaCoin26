@@ -1,17 +1,17 @@
-<?php namespace Proxy\Adapter;
+<?php
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+namespace Proxy\Adapter;
 
-interface AdapterInterface {
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
+interface AdapterInterface
+{
     /**
      * Send the request and return the response.
      *
-     * @param  Request $request
-     * @param  string  $url
-     * @return Response
+     * @param  RequestInterface $request
+     * @return ResponseInterface
      */
-    public function send(Request $request, $url);
-
+    public function send(RequestInterface $request);
 }

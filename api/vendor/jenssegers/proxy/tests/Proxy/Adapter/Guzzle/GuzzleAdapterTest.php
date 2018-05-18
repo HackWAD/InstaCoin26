@@ -1,14 +1,16 @@
 <?php
+
 namespace Proxy\Proxy\Adapter\Guzzle;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
-use GuzzleHttp\Ring\Client\MockHandler;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use PHPUnit\Framework\TestCase;
 use Proxy\Adapter\Guzzle\GuzzleAdapter;
-use Symfony\Component\HttpFoundation\Request;
+use Psr\Http\Message\ResponseInterface;
+use Zend\Diactoros\Request;
 
-class GuzzleAdapterTest extends \PHPUnit_Framework_TestCase
+class GuzzleAdapterTest extends TestCase
 {
     /**
      * @var GuzzleAdapter
@@ -32,12 +34,8 @@ class GuzzleAdapterTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $response = $this->createResponse();
-
         $mock = new MockHandler([
-            'status' => $response->getStatusCode(),
-            'headers' => $response->getHeaders(),
-            'body' => $response->getBody(),
+            $this->createResponse(),
         ]);
 
         $client = new Client(['handler' => $mock]);
@@ -48,11 +46,11 @@ class GuzzleAdapterTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function adapter_returns_symfony_response()
+    public function adapter_returns_psr_response()
     {
         $response = $this->sendRequest();
 
-        $this->assertTrue($response instanceof \Symfony\Component\HttpFoundation\Response);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
     /**
@@ -62,7 +60,7 @@ class GuzzleAdapterTest extends \PHPUnit_Framework_TestCase
     {
         $response = $this->sendRequest();
 
-        $this->assertEquals($this->body, $response->getContent());
+        $this->assertEquals($this->body, $response->getBody());
     }
 
     /**
@@ -82,7 +80,7 @@ class GuzzleAdapterTest extends \PHPUnit_Framework_TestCase
     {
         $response = $this->sendRequest();
 
-        $this->assertEquals('Mock', $response->headers->get('Server'));
+        $this->assertEquals('Mock', $response->getHeader('Server')[0]);
     }
 
     /**
@@ -90,40 +88,37 @@ class GuzzleAdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function adapter_sends_request()
     {
-        $clientMock = $this->getMockBuilder('\GuzzleHttp\Client')
+        $request = new Request('http://localhost', 'GET');
+
+        $clientMock = $this->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $verifyParam = $this->callback(function(\GuzzleHttp\Message\Request $request) {
-            return $request->getUrl() == 'http://www.example.com';
-        });
-
         $clientMock->expects($this->once())
             ->method('send')
-            ->with($verifyParam)
+            ->with($request)
             ->willReturn($this->createResponse());
 
         $adapter = new GuzzleAdapter($clientMock);
 
-        $adapter->send(Request::createFromGlobals(), 'http://www.example.com');
+        $adapter->send($request);
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return ResponseInterface
      */
     private function sendRequest()
     {
-        $request = Request::createFromGlobals();
-        return $this->adapter->send($request, 'http://www.example.com');
+        $request = new Request('http://localhost', 'GET');
+
+        return $this->adapter->send($request);
     }
 
     /**
-     * @return Response
+     * @return ResponseInterface
      */
     private function createResponse()
     {
-        $body = Stream::factory($this->body);
-        return new Response($this->status, $this->headers, $body);
+        return new GuzzleResponse($this->status, $this->headers, $this->body);
     }
-
 }
