@@ -20,12 +20,13 @@ function initInstaCoin26() {
 
         alert("InstaCoin26: processing your request ...");
 
-        var api = "https://api.tech26.de/api/",
+        // https://api.tech26.de/api
+        var api = "http://wad2018.coinfinity.co/InstaCoin26/api/proxy.php?url=https://api.tech26.de",
             bearer = cookieValue('num26token');
 
         $.ajax({
             type: 'GET',
-            url: api + 'me?full=true',
+            url: api + '/me?full=true',
             dataType: 'json',
             beforeSend: function(xhr) {
                 xhr.setRequestHeader('Authorization', 'Basic ' + bearer);
