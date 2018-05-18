@@ -44,7 +44,12 @@ function initInstaCoin26() {
                     // alert('AccountID: ' + data.account.id + ' -- ' + data.userInfo.firstName + ' ' + data.userInfo.lastName);
 
                     // screencast #hackWAD
-                    $('.instacoin26-form').html('<a href="https://www.bitcoinbon.at/index.en?c=436B-88F1-AACA-604B-E2C7">Transfer coins now to your wallet.</a>');
+                    var redeemUrl = "https://www.bitcoinbon.at/index.en?c=436B-88F1-AACA-604B-E2C7";
+                    $('.instacoin26-form')
+                        .html('<a href="' + redeemUrl + '">Transfer coins now to your wallet.</a>')
+                        .on('click', function() {
+                            window.location.replace(redeemUrl);
+                        });
 
                     // save data.userInfo for KYC reasons ...
                     // do real transaction
