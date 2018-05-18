@@ -18,7 +18,8 @@ function initInstaCoin26() {
     $('.instacoin26-buy').on('click', function(e) {
         e.preventDefault();
 
-        alert("InstaCoin26: processing your request ...");
+        // alert("InstaCoin26: processing your request ...");
+        $('.instacoin26-form').html('Processing request ...');
 
         // https://api.tech26.de/api
         var api = "https://wad2018.coinfinity.co/InstaCoin26/api/proxy.php?url=https://api.tech26.de/api",
@@ -34,7 +35,7 @@ function initInstaCoin26() {
             },
             success: function(data) {
 
-                if (data.account.id) {
+                if (data.account && data.account.id) {
                     alert('AccountID: ' + data.account.id + ' -- ' + data.userInfo.firstName + ' ' + data.userInfo.lastName);
                 } else if (data.bitcoinbon != '') {
                     $('.instacoin26-form').html('<a href="' + data.bitcoinbon + '">Redeem Coins now.</a>');
