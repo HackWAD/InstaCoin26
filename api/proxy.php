@@ -32,9 +32,15 @@ header("Content-Type: application/json");
 
 $data = $response->getContent();
 //if (strpos($_REQUEST['url'], '/me') >= 0) {
-    $deflated = @gzinflate($data); // to avoid getting a warning
+    /*if (gzinflate(substr($data, 10))) {
+        echo gzinflate(substr($data, 10));
+    }*/
+
+    $deflated = @gzinflate(substr($data, 10)); // to avoid getting a warning
     if ($data != $deflated && $deflated !== FALSE) {
-        $return = gzinflate($data);
+        $return = gzinflate(substr($data, 10));
+    } else {
+        $return = $data;
     }
 //}
 
