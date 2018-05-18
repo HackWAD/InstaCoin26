@@ -42,5 +42,8 @@ $proxy->filter(new RemoveEncodingFilter());
 // Forward the request and get the response.
 $response = $proxy->forward($request)->to($_REQUEST['url']);
 
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Origin: https://my.n26.com");
+
 // Output response to the browser.
 (new Zend\Diactoros\Response\SapiEmitter)->emit($response);
