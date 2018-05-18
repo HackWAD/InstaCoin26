@@ -18,7 +18,7 @@ $request->headers->set('Authorization', 'Bearer ' . $_REQUEST['token']);
 // print_r($response);
 
 // Forward the request and get the response.
-// $response = Factory::forward($request)->to($_REQUEST['url']);
+$response = Factory::forward($request)->to($_REQUEST['url']);
 
 // Output response to the browser.
 header("Access-Control-Allow-Headers: Authorization, X-N26Auth");
