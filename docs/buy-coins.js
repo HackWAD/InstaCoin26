@@ -16,6 +16,8 @@ function initInstaCoin26() {
 
         $('.instacoin26-form').removeClass('hidden');
         $('.instacoin26-info').addClass('hidden');
+
+        $('.instacoin26-pin').focus();
     });
 
     $('.instacoin26-buy').on('click', function(e) {

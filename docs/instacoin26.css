@@ -9,7 +9,7 @@
     text-decoration: none;
 }
 
-#instacoin26 {
+#ic26 {
     line-height: 24px;
 }
 
@@ -17,30 +17,24 @@
     display: none;
 }
 
-.instacoin26-pin {
+.ic26-pin {
     width: 22px;
     margin: 0 0 0 5px;
 }
 
-.instacoin26-form a,
-.instacoin26-form a:hover,
-.instacoin26-form a:active,
-.instacoin26-form a:visited {
+.ic26-form a,
+.ic26-form a:hover,
+.ic26-form a:active,
+.ic26-form a:visited {
     color: white;
 }
 
-.instacoin26-form input,
-.instacoin26-form button {
+.ic26-form input,
+.ic26-form button {
     height: 23px;
 }
 
-.instacoin26-info,
-
-/*.instacoin26-info a,
-.instacoin26-info a:hover,
-.instacoin26-info a:active,
-.instacoin26-info a:visited*/
-
+.ic26-info,
 {
     text-decoration: underline;
     cursor: pointer;
